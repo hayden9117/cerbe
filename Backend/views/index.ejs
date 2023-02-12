@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>Client Portal</title>
+      <link rel="stylesheet" href="/css/bootstrap.min.css">
+      <style>
+         table, th, td {
+         border: 1px solid black;
+         align-items: center;
+         text-align: center;
+         padding: 1em;
+         }
+         .container {
+         display:flex;
+         flex-direction: column-reverse;
+         align-items: center;
+         justify-content: center;
+         justify-items: center;
+         }
+         .container-table {
+         display:flex;
+         flex-direction: column;
+         align-items: center;
+         justify-content: center;
+         justify-items: center;
+         }
+         /* The Modal (background) */
+         .modal {
+         display: none; /* Hidden by default */
+         position: fixed; /* Stay in place */
+         z-index: 1; /* Sit on top */
+         padding-top: 100px; /* Location of the box */
+         left: 0;
+         top: 0;
+         width: 100%; /* Full width */
+         height: 100%; /* Full height */
+         overflow: auto; /* Enable scroll if needed */
+         background-color: rgb(0,0,0); /* Fallback color */
+         background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+         }
+         /* Modal Content */
+         .modal-content {
+         background-color: #fefefe;
+         margin: auto;
+         padding: 20px;
+         border: 1px solid #888;
+         width: 80%;
+         }
+         /* The Close Button */
+         .close {
+         color: #aaaaaa;
+         float: right;
+         font-size: 28px;
+         font-weight: bold;
+         }
+         .close:hover,
+         .close:focus {
+         color: #000;
+         text-decoration: none;
+         cursor: pointer;
+         }
+      </style>
+   </head>
+   <body>
+      <div class="container">
+         <div class="container-table">
+            <h1>Options</h1>
+            <table class="table table-striped">
+               <thead>
+                  <br>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><a href="" class="btn btn-primary">Analytics</a></td>
+                  </tr>
+                  <tr>
+                     <td><a href="" class="btn btn-danger">Sales</a></td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+         <div class="container-table">
+            <h1>Webiquette Client Requests</h1>
+            <table class="table table-striped">
+               <thead>
+                  <br>
+                  <td><b>firstname</b></td>
+                  <td><b>lastname</b></td>
+                  <td><b>email</b></td>
+                  <td><b>Reason</b></td>
+                  <td><b>date</b></td>
+                  <td><b>message</b></td>
+                  <td colspan="2"><b>Actions</b></td>
+                  </tr>
+               </thead>
+               <tbody>
+                  <% for(var i=0; i < requests.length; i++) { %>
+                  <tr>
+                     <td><%= requests[i].firstname %></td>
+                     <td><%= requests[i].lastname %></td>
+                     <td><%= requests[i].email %></td>
+                     <td><%= requests[i].reason %></td>
+                     <td><%= requests[i].date %></td>
+                     <td><%= requests[i].message %></td>
+                     <td>
+                        <form method="POST" action="/clientPortal/delete/<%= requests[i]._id %>?_method=DELETE">
+                           <button type="submit" class="btn btn-default">Delete</button>
+                        </form>
+                     </td>
+                     <td>
+                        <button id="myBtn">Update</button>
+                     </td>
+                     <% } %>
+               </tbody>
+            </table>
+         </div>
+         <div id="myModal" class="modal">
+            <% for(var i=0; i < requests.length; i++) { %>
+            <!-- Modal content -->
+            <div class="modal-content">
+               <span class="close">&times;</span>
+               <div class="container" style="gap: 10px;">
+                  <h1>Edit request</h1>
+                  <form method="POST" action="/clientPortal/update/<%= requests[i]._id %>">
+                     <div class="form-group">
+                        <label for="item">firstname :</label>
+                        <input type="text" class="form-control" id="firstname" name="first" value="<%= requests[i].firstname %>">
+                     </div>
+                     <div class="form-group">
+                        <label for="item">lastname :</label>
+                        <input type="text" class="form-control" id="lastname" name="last" value="<%= requests[i].lastname %>">
+                     </div>
+                     <div class="form-group">
+                        <label for="item">email :</label>
+                        <input type="text" class="form-control" id="email" name="email" value="<%= requests[i].email %>">
+                     </div>
+                     <div class="form-group">
+                        <label for="item">message :</label>
+                        <textarea cols="40" rows="5" rows="10" class="form-control" id="message" name="message" ><%= requests[i].message %></textarea>
+                     </div>
+                     <select name="reason" id="reason" selected="<%= requests[i].reason %>">
+                      
+                        <option value="Build A new Site">Build A new Site</option>
+                        <option value="Maintain a current Site">
+                           Maintain a current Site
+                        </option>
+                        <option value="Consulting service">Consulting service</option>
+                        </option>
+                     </select>
+                     <button type="submit" class="btn btn-default">Update</button>
+                  </form>
+               </div>
+            </div>
+            <% } %>
+         </div>
+      </div >
+      <script>
+         // Get the modal
+         var modal = document.getElementById("myModal");
+         
+         // Get the button that opens the modal
+         var btn = document.getElementById("myBtn");
+         
+         // Get the <span> element that closes the modal
+         var span = document.getElementsByClassName("close")[0];
+         
+         // When the user clicks the button, open the modal 
+         btn.onclick = function() {
+           modal.style.display = "block";
+         }
+         
+         // When the user clicks on <span> (x), close the modal
+         span.onclick = function() {
+           modal.style.display = "none";
+         }
+         
+         // When the user clicks anywhere outside of the modal, close it
+         window.onclick = function(event) {
+           if (event.target == modal) {
+             modal.style.display = "none";
+           }
+         }
+      </script>
+   </body>
+</html>
