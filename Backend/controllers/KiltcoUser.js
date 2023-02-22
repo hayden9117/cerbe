@@ -156,13 +156,14 @@ router.post("/changeEmail", async (req, res) => {
     const { email, emailNew } = req.body;
     // get bearer token
     const token = req.headers.authorization.split(" ")[1];
-    console.log(req.body)
+
 // check if email exists in mongo db
 
-      const user = await KiltcoUser.findOne({ email: emailNew });
-console.log(user)
+      const userCount = await KiltcoUser.findOne({ email: emailNew }).count();
 
-      if (user) {
+      console.log(userCount)
+
+      if (userCount > 0) {
         res.status(400).json({ error: "email already in use" });
       } else {
 
@@ -176,7 +177,7 @@ console.log(user)
         );
 
        
-        console.log(userNewEmail)
+       userNewEmail.update()
         res.json(userNewEmail);
       }
 
@@ -196,7 +197,53 @@ console.log(user)
 
   )
 
-
+  router.post("/changeAddress", async (req, res) => {
+     
+    try {
+  // check if email is already in use
+      const { email, emailNew } = req.body;
+      // get bearer token
+      const token = req.headers.authorization.split(" ")[1];
+  
+  // check if email exists in mongo db
+  
+        const userCount = await KiltcoUser.findOne({ email: emailNew }).count();
+  
+        console.log(userCount)
+  
+        if (userCount > 0) {
+          res.status(400).json({ error: "email already in use" });
+        } else {
+  
+          // update email for the user with the email
+          const userNewEmail = await KiltcoUser.findOneAndUpdate(
+            email,
+            {
+              email: emailNew,
+            },
+            { new: true }
+          );
+  
+         
+         userNewEmail.update()
+          res.json(userNewEmail);
+        }
+  
+  
+  
+  
+  
+  
+  
+  
+    } catch (error) {
+      res.status(400).json({ error });
+    }
+    
+  
+  }
+  
+    )
       
 
 module.exports = router;

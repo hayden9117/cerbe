@@ -13,7 +13,8 @@ const Projects = require("./controllers/Project");
 const Threads = require("./controllers/Threads");
 const KiltcoUser = require("./controllers/KiltcoUser");
 const { isLoggedIn } = require("./controllers/middleware"); // import isLoggedIn custom middleware
-const { DEV_ORIGIN } = process.env;
+
+const origin =  process.env.DEV_ORIGIN;
 // Import the mongoose module
 
 // Bind connection to error event (to get notification of connection errors)
@@ -37,9 +38,14 @@ const { DEV_ORIGIN } = process.env;
 // https://www.securecoding.com/blog/javascript-as-backend-prone-to-security-risks/
 
 // GLOBAL MIDDLEWARE
+// how do i allow multiple origins?
+
+
+
+
 app.use(cors(
   {
-    origin: "http://127.0.0.1:3000",  // allow to server to accept request from different origin
+    origin: origin,  // allow to server to accept request from different origin
     credentials: true,
     optionsSuccessStatus: 200,
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -49,20 +55,8 @@ app.use(cors(
 )); // add cors headers
 app.use(morgan("tiny")); // log the request for debugging
 app.use(express.json()); // parse json bodies
-console.log(DEV_ORIGIN);
-let environmentaRR = DEV_ORIGIN.split(" ");
-environmentaRR.forEach((origin) => {
-  app.use(
-    cors({
-      origin: origin,
-      credentials: true,
-      optionsSuccessStatus: 200,
-      allowedHeaders: ["Content-Type", "Authorization"],
-      methods: ["GET", "POST", "PUT", "DELETE"],
-      preflightContinue: false,
-    })
-  );
-});
+
+
 
 app.get("/", async function (req, res) {
   res.sendFile(path.join(__dirname, "public", "index.html"));
