@@ -11,6 +11,7 @@ const Client = require("./controllers/Clients");
 const ClientRequests = require("./routes/clientRequests");
 const Projects = require("./controllers/Project");
 const Threads = require("./controllers/Threads");
+const KiltcoUser = require("./controllers/KiltcoUser");
 const { isLoggedIn } = require("./controllers/middleware"); // import isLoggedIn custom middleware
 const { DEV_ORIGIN } = process.env;
 // Import the mongoose module
@@ -36,7 +37,16 @@ const { DEV_ORIGIN } = process.env;
 // https://www.securecoding.com/blog/javascript-as-backend-prone-to-security-risks/
 
 // GLOBAL MIDDLEWARE
-app.use(cors()); // add cors headers
+app.use(cors(
+  {
+    origin: "http://127.0.0.1:3000",  // allow to server to accept request from different origin
+    credentials: true,
+    optionsSuccessStatus: 200,
+    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    preflightContinue: false,
+  }
+)); // add cors headers
 app.use(morgan("tiny")); // log the request for debugging
 app.use(express.json()); // parse json bodies
 console.log(DEV_ORIGIN);
@@ -63,6 +73,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use("/", UserRouter);
+app.use("/KiltcoUser",KiltcoUser);
 app.use("/clientPortal", Client);
 app.use("/ClientRequests", ClientRequests);
 app.use("/project", Projects);
